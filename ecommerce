@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definição da estrutura do produto
+typedef struct {
+    int id;
+    char nome[50];
+    float preco;
+} Produto;
+
+// Função para exibir a lista de produtos
+void exibirProdutos(Produto produtos[], int numProdutos) {
+    printf("\nLista de Produtos:\n");
+    for (int i = 0; i < numProdutos; i++) {
+        printf("ID: %d - %s - R$ %.2f\n", produtos[i].id, produtos[i].nome, produtos[i].preco);
+    }
+}
+
+// Função para calcular o total da compra
+float calcularTotal(Produto produtos[], int numProdutos, int ids[], int quantidades[], int numItens) {
+    float total = 0.0;
+    for (int i = 0; i < numItens; i++) {
+        for (int j = 0; j < numProdutos; j++) {
+            if (produtos[j].id == ids[i]) {
+                total += produtos[j].preco * quantidades[i];
+                break;
+            }
+        }
+    }
+    return total;
+}
+
+// Função principal
+int main() {
+    // Criação da lista de produtos
+    Produto produtos[] = {
+        {1, "Capinha para Celular", 20.00},
+        {2, "Película de Vidro", 15.00},
+        {3, "Carregador Rápido", 30.00},
+        {4, "Teclado Sem Fio", 60.00},
+        {5, "Mouse Óptico", 25.00}
+    };
+    int numProdutos = sizeof(produtos) / sizeof(produtos[0]);
+
+    int opcao;
+    int numItens;
+    int ids[10];
+    int quantidades[10];
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Exibir produtos\n");
+        printf("2. Adicionar produtos ao carrinho\n");
+        printf("3. Finalizar compra\n");
+        printf("4. Sair\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                // Exibir a lista de produtos
+                exibirProdutos(produtos, numProdutos);
+                break;
+                
+            case 2:
+                // Adicionar produtos ao carrinho
+                printf("\nQuantos itens você deseja adicionar ao carrinho? ");
+                scanf("%d", &numItens);
+
+                if (numItens > 10) {
+                    printf("Número máximo de itens no carrinho é 10.\n");
+                    numItens = 10;
+                }
+
+                for (int i = 0; i < numItens; i++) {
+                    printf("\nDigite o ID do produto %d: ", i + 1);
+                    scanf("%d", &ids[i]);
+                    printf("Digite a quantidade: ");
+                    scanf("%d", &quantidades[i]);
+                }
+                break;
+
+            case 3:
+                // Finalizar compra
+                {
+                    float total = calcularTotal(produtos, numProdutos, ids, quantidades, numItens);
+                    printf("\nO total da sua compra é: R$ %.2f\n", total);
+                }
+                break;
+
+            case 4:
+                // Sair
+                printf("Saindo...\n");
+                exit(0);
+
+            default:
+                printf("Opção inválida! Tente novamente.\n");
+        }
+    }
+
+    return 0;
+}
